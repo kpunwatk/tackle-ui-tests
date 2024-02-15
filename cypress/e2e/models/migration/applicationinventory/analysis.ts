@@ -31,7 +31,6 @@ import {
     cleanupDownloads,
     click,
     clickByText,
-    clickJs,
     clickTab,
     clickWithin,
     doesExistSelector,
@@ -41,6 +40,7 @@ import {
     performRowActionByIcon,
     selectCheckBox,
     selectFormItems,
+    selectFromDropList,
     sidedrawerTab,
     uploadApplications,
     uploadXml,
@@ -58,6 +58,8 @@ import {
     analysisColumn,
     analysisDetails,
     analyzeManuallyButton,
+    camelToggleButton,
+    dropDownMenu,
     effortColumn,
     enableAutomatedTagging,
     enableTransactionAnalysis,
@@ -69,6 +71,7 @@ import {
     kebabTopMenuButton,
     manageCredentials,
     mavenCredential,
+    openjdkToggleButton,
     panelBody,
     reportStoryPoints,
     rightSideMenu,
@@ -82,7 +85,6 @@ import {
 } from "../../../views/applicationinventory.view";
 import { CustomMigrationTargetView } from "../../../views/custom-migration-target.view";
 import { actionSelectToggle } from "../../../views/common.view";
-import * as commonView from "../../../views/common.view";
 
 export class Analysis extends Application {
     name: string;
@@ -170,7 +172,23 @@ export class Analysis extends Application {
 
     protected selectTarget(target: string[]): void {
         for (let i = 0; i < target.length; i++) {
-            cy.get("div.pf-v5-c-empty-state__content").children("h4").contains(target[i]).click();
+            if (
+                target.includes("OpenJDK 11") ||
+                target.includes("OpenJDK 17") ||
+                target.includes("OpenJDK 21")
+            ) {
+                click(openjdkToggleButton);
+                selectFromDropList(dropDownMenu, target[i]);
+            }
+            if (target.includes("camel:3") || target.includes("camel:4")) {
+                click(camelToggleButton);
+                selectFromDropList(dropDownMenu, target[i]);
+            } else {
+                cy.get("div.pf-v5-c-empty-state__content")
+                    .children("h4")
+                    .contains(target[i])
+                    .click();
+            }
         }
     }
 

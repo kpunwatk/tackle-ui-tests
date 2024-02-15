@@ -259,6 +259,41 @@ describe(["@tier1"], "Source Analysis", () => {
         application.verifyEffort(3);
     });
 
+    it("Openjdk17 Source + dependencies analysis on tackletest app", function () {
+        const application = new Analysis(
+            getRandomApplicationData("tackleTestApp_Source+dependencies_jws6", {
+                sourceData: this.appData["tackle-testapp-git"],
+            }),
+            getRandomAnalysisData(
+                this.analysisData["openJDK17_source+dep_analysis_on_tackletestapp"]
+            )
+        );
+        application.create();
+        applicationsList.push(application);
+        cy.wait("@getApplication");
+        cy.wait(2 * SEC);
+        application.manageCredentials(source_credential.name, maven_credential.name);
+        application.analyze();
+        application.verifyAnalysisStatus("Completed");
+    });
+
+    it("OpenJDK21 Source + dependencies analysis on daytrader app", function () {
+        const application = new Analysis(
+            getRandomApplicationData("dayTraderApp_Source+dependencies", {
+                sourceData: this.appData["daytrader-app"],
+            }),
+            getRandomAnalysisData(
+                this.analysisData["OpenJDK21source+dep_analysis_on_daytrader-app"]
+            )
+        );
+        application.create();
+        applicationsList.push(application);
+        cy.wait("@getApplication");
+        cy.wait(2 * SEC);
+        application.analyze();
+        application.verifyAnalysisStatus("Completed");
+    });
+
     after("Perform test data clean up", function () {
         deleteByList(applicationsList);
         writeMavenSettingsFile(data.getRandomWord(5), data.getRandomWord(5));
