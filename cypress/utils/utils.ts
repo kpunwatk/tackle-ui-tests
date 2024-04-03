@@ -273,6 +273,7 @@ export function selectItemsPerPage(items: number): void {
                 cy.get(`li[data-action="per-page-${items}"]`, { log: false })
                     .contains(`${items}`)
                     .click({
+                        timeout: 30 * SEC,
                         force: true,
                         log: false,
                     });
